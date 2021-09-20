@@ -4,7 +4,9 @@ RUN apk add --update --no-cache ca-certificates tzdata && update-ca-certificates
 RUN echo "[WARNING] Make sure you have run 'goreleaser release', before 'docker build'!"
 ADD ./target/dist /opt/
 
-FROM scratch as runner
+FROM alpine as runner
+
+RUN apk add --update --no-cache diffutils
 
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
@@ -15,8 +17,8 @@ ARG VERSION
 ARG VCS_REF
 ARG DOCKERFILE_PATH
 
-LABEL vendor="Meltwater" \
-    name="meltwater/drone-cache" \
+LABEL vendor="hummer12007" \
+    name="hummer12007/drone-cache" \
     description="A Drone plugin for caching current workspace files between builds to reduce your build times." \
     maintainer="Kemal Akkoyun <kakkoyun@gmail.com>" \
     version="$VERSION" \
@@ -27,8 +29,8 @@ LABEL vendor="Meltwater" \
     org.label-schema.name="meltwater/drone-cache" \
     org.label-schema.schema-version="1.0" \
     org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/meltwater/drone-cache" \
-    org.label-schema.vendor="meltwater/drone-cache" \
+    org.label-schema.vcs-url="https://github.com/hummer12007/drone-cache" \
+    org.label-schema.vendor="hummer12007/drone-cache" \
     org.label-schema.version=$VERSION
 
 ENTRYPOINT ["/bin/drone-cache"]
